@@ -90,9 +90,13 @@ class PriceMachine():
         print('-------------------------- РЕЗУЛЬТАТ ЗАПРОСА ---------------------------')
         # отбираем строки где в названии продукта есть text
         resultat = self.data.loc[self.data.apply(lambda x: text.lower() in x['Product'].lower(), axis=1)]
-        with pd.option_context('display.max_rows', None, 'display.max_columns', 7, 'display.max_colwidth', 40):
-            print(resultat.sort_values('Prc_kg', ascending=True, ignore_index=True))
+        if len(resultat) > 0:
+            with pd.option_context('display.max_rows', None, 'display.max_columns', 7, 'display.max_colwidth', 40):
+                print(resultat.sort_values('Prc_kg', ascending=True, ignore_index=True))
+        else:
+            print('Ничего не найдено')
         print('------------------------------------------------------------------------')
+
         pass
 
 '''
