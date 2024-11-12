@@ -26,6 +26,9 @@ class PriceMachine():
             for file in files:
                 if file.endswith('.csv') and 'price' in file:
                     self.list_files_.append(file)
+        if len(self.list_files_) == 0: # если файлов нет выходим
+            print('Файлы прайс-листов не найдены')
+            return False
         print('обнаружены файлы прайс-листов')
         _ = [print(file) for file in self.list_files_]
         # читаем данные из каждого файла и помещаем в датафрейм
@@ -54,6 +57,7 @@ class PriceMachine():
         self.data = self.data.sort_values('Prc_kg', ascending=True, ignore_index=True)
         print(' файлы прочитаны, вся информация занесена в общий прайс-лист, отсортирована')
         print(self.data)
+        return True
 
     def export_to_html(self, fname='output.html'):
         result = '''
@@ -108,28 +112,29 @@ while True:
     if os.path.exists(file_path):
         break
     print(f'Путь {file_path} не найден')
-pm.load_prices(file_path=file_path)
-
-while True:
-    enter = input('\nУкажите часть названия продукта или exit для выхода >')
-    if enter.lower() == 'exit':
-        break
-    pm.find_text(text=enter)
-print('the end - работа анализатора завершена')
-
-while True:
-    html_name = input(
-        '\nДля сохранения общего прайса в HTML, задайте имя файла, \nесли имя пустое файл не будет создан >')
-    html_name = str(html_name)
-    if len(html_name) != 0:
-        if not '.html' in html_name and not '.htm' in html_name:
-            html_name = html_name + '.html'
-        try:
-            pm.export_to_html(fname=html_name)
+if pm.load_prices(file_path=file_path):
+    # если файлы есть и прочитаны продолжаем работу
+    while True:
+        enter = input('\nУкажите часть названия продукта или exit для выхода >')
+        if enter.lower() == 'exit':
             break
-        except:
-            print(f'Неверное имя {html_name}, файл не создан')
-            continue
-    break
+        pm.find_text(text=enter)
+    print('the end - работа анализатора завершена')
+    # узнаем надо ли сохранить html после завершения
+    while True:
+        html_name = input(
+            '\nДля сохранения общего прайса в HTML, задайте имя файла, \nесли имя пустое файл не будет создан >')
+        html_name = str(html_name)
+        if len(html_name) != 0:
+            if not '.html' in html_name and not '.htm' in html_name:
+                html_name = html_name + '.html'
+            try:
+                pm.export_to_html(fname=html_name)
+                print(f'Файл {html_name} сохранен')
+                break
+            except:
+                print(f'Неверное имя {html_name}, файл не создан')
+                continue
+        break
 
 print('Программа завершена')
