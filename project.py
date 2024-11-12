@@ -26,7 +26,7 @@ class PriceMachine():
             for file in files:
                 if file.endswith('.csv') and 'price' in file:
                     self.list_files_.append(file)
-        if len(self.list_files_) == 0: # если файлов нет выходим
+        if len(self.list_files_) == 0:  # если файлов нет выходим
             print('Файлы прайс-листов не найдены')
             return False
         print('обнаружены файлы прайс-листов')
@@ -102,6 +102,7 @@ class PriceMachine():
         print('------------------------------------------------------------------------')
 
         pass
+
 
 '''
     Логика работы программы
